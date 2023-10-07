@@ -2,3 +2,4 @@
 *.lock
 *.json
 *.sqlite
+*.sqlite-journal
