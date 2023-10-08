@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 
 
 class ArtificialNeuralNetwork:
-
     def get_data(void):
         Training_file = pd.read_csv("https://raw.githubusercontent.com/Raftaar-98/ANN/main/s41598-020-73558-3_sepsis_survival_primary_cohort.csv",skiprows=[0], header = None)
         Testing_file = pd.read_csv("https://raw.githubusercontent.com/Raftaar-98/ANN/main/s41598-020-73558-3_sepsis_survival_validation_cohort.csv",skiprows=[0], header = None)  
@@ -28,3 +27,12 @@ class ArtificialNeuralNetwork:
             return 0
         else: 
             return x
+
+    def forward_propagation(weights,activation,data):
+        net = weights[0,:].T @ data
+        if (activation == "sigmoid"):
+            return ArtificialNeuralNetwork.sigmoid_ac(net)
+        if (activation == "tanh"):
+            return ArtificialNeuralNetwork.tanh_ac(net)
+        if (activation == "relu"):
+            return ArtificialNeuralNetwork.relu_ac(net)
