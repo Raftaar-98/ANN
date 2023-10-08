@@ -4,20 +4,22 @@
 #
 # Author 2 : Uthama Kadengodlu          NETID: UXK210012
 # Implements Artificial Neural Network
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-Training_file = pd.read_csv("https://raw.githubusercontent.com/Raftaar-98/ANN/main/s41598-020-73558-3_sepsis_survival_primary_cohort.csv",skiprows=[0], header = None)
-Testing_file = pd.read_csv("https://raw.githubusercontent.com/Raftaar-98/ANN/main/s41598-020-73558-3_sepsis_survival_validation_cohort.csv",skiprows=[0], header = None)  
-        
-from sklearn import datasets
-iris = datasets.load_iris()
-X = iris.data # features, 'sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'
-y = iris.target # label, 'setosa' 'versicolor' 'virginica'
+Training_file = pd.read_csv("https://raw.githubusercontent.com/Raftaar-98/ANN/main/Iris.csv",skiprows=[0], header = None)
 
+
+X = Training_file.iloc[:,0:4] # features, 'sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'
+y = Training_file.iloc[:,4] # label, 'setosa' 'versicolor' 'virginica'
+X = X.to_numpy()
+y = y.to_numpy()
+print(X)
+print(y)
 print('A data:', X[0], '\nLabel:', y[0])
-re_y = np.array([1 if i==0 else 0 for i in y]) # relabel, 'setosa':1, 'not setosa':0
+re_y = np.array([1 if i==2 else 0 for i in y]) # relabel, 'setosa':1, 'not setosa':0
 print(re_y)
 def plot(xfeature_name, yfeature_name, xfeature, yfeature, ori_label, re_label):
     # setting color
@@ -31,14 +33,14 @@ def plot(xfeature_name, yfeature_name, xfeature, yfeature, ori_label, re_label):
     plt.xlabel(xfeature_name)
     plt.ylabel(yfeature_name)
     for i, j, color in zip(xfeature, yfeature, ori_label):
-        plt.scatter(i, j, c=ori_color[color], marker='o', s=50, edgecolor='k',cmap=plt.cm.Spectral)
+        plt.scatter(i, j, c=ori_color[color], marker='o', s=50, edgecolor='k')
     # plot relabel figure
     plt.subplot(1, 2, 2)
     plt.title("Relabel")
     plt.xlabel(xfeature_name)
     plt.ylabel(yfeature_name)
     for i, j, color in zip(xfeature, yfeature, re_label):
-        plt.scatter(i, j, c=relbl_color[color], marker='o', s=50, edgecolor='k',cmap=plt.cm.Spectral)
+        plt.scatter(i, j, c=relbl_color[color], marker='o', s=50, edgecolor='k')
 
 plot('sepal length(cm)', 'sepal width(cm)', X[:, 0], X[:, 1], y, re_y)
 plot('petal length(cm)', 'petal width(cm)', X[:, 2], X[:, 3], y, re_y)
@@ -107,11 +109,12 @@ class my_NN(object):
         return (cnt/len(y))*100
 
 if __name__=='__main__':
-    train_X, test_X, train_y, test_y = train_test_split(X, re_y, test_size=0.25) # split training data and testing data
+    train_X = X # split training data and testing data
+    train_y = y
     clr = my_NN() #initialize the model
     clr.train(train_X, train_y) # train model
-    pre_y = clr.predict(test_X) # predict
-    score = clr.score(pre_y, test_y) # get the accuracy score
+    pre_y = clr.predict(train_X) # predict
+    score = clr.score(pre_y, train_y) # get the accuracy score
     print('predcit: ', pre_y)
-    print('anser:', test_y)
+    print('anser:', train_y)
     print('score: ', score)
